@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const conn = require('./www/config');
-const _router = require('./routers/index');
+// const _router = require('./routers/index');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 app.use(cors());
@@ -13,7 +13,7 @@ conn.connect(err=>{
         console.log('*********** DB Connection working !');
     }
 })
-app.use('/', _router);
+// app.use('/', _router);
 
 
 app.listen(8080, err=>{
