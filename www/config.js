@@ -1,9 +1,10 @@
 const mysql = require('mysql');
 conn = mysql.createConnection({
-    host:'000webhost.com',
-    user:'id22073986_admin',
-    password:'Shri@123!',
-    database:'id22073986_webguru',
+    host:'mysql-1534af81-abhash-1b57.g.aivencloud.com',
+    user:'avnadmin',
+    password:'AVNS_1neP3haGeRygTbF3C0g',
+    database:'defaultdb',
+    port:24543
 });
 
 module.exports  = conn;
