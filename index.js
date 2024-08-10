@@ -13,7 +13,7 @@ conn.connect(err=>{
         console.log('*********** DB Connection working !');
     }
 })
-// app.use('/', _router);
+app.use('/', _router);
 
 
 app.listen(8080, err=>{
