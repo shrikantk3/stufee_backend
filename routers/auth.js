@@ -10,7 +10,7 @@ Authrouter.get('/', (req, res) => {
       res.send(APIresult(err, row, feild, 'List execution successful!'));
     })
   }).get('/:id', (req, res) => {
-    req.params.id = 'TRJB1906';
+    console.log(req.params.id)
     res.setHeader('Access-Control-Allow-Origin', '*');
       if (req.params.id) {
         connection.query(`select * from users_log where uid="${req.params.id}"`, (err, row, feild) => {
@@ -20,18 +20,21 @@ Authrouter.get('/', (req, res) => {
     
   })
   .post('/register', (req, res) => {
+    console.log('Data', req.body)
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.body) {
       let data = req.body;
-      connection.query('select max(uid) as maxId from users_log', (err, rows, result)=>{
-        console.log('MAX Id :', (rows[0].maxId +1));
-      
-        connection.query(`INSERT INTO users_log(uid,username,phone,type,createdon,created_by,modify_on,modify_by,email)VALUES('${data.id}','${data.name}',${data.phone},'${data.type}',sysdate(),'admin',sysdate(),'admin','${data.email}')`, (err, row, feild) => {
-          res.send(APIresult(err,row, feild, 'List execution successful!'));
+        let date = new Date();
+        data.uid = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
+        let strquery = `INSERT INTO users_log(uid,username,password, phone,type,createdon,created_by,modify_on,
+        modify_by,email)VALUES('${data.uid}','${data.username}','${data.password}',${data.phone},'${data.type}',
+        sysdate(),'admin',sysdate(),'admin','${data.email}')`;
+        connection.query(strquery, (err, row, feild) => {
+          res.end(APIresult(err,row, feild, 'List execution successful!'));
         })
-      })
+    
     } else {
-      res.send({
+      res.end({
         result: null,
         message: 'invalid input please try again',
         valid: false
@@ -39,13 +42,12 @@ Authrouter.get('/', (req, res) => {
     }
   })
   .post('/login', (req, res) => {
-    console.log('User  login:', req.body)
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.body) {
       let data = req.body;
       connection.query(`SELECT * from users_log where username ='${data.username}'`, (err, row, feild) => {
         if(row[0].uid){
-           let strSQL = `SELECT * from ${row[0].type=='tutor'?'tutor_log':'candidate_log'} where phone=${row[0].phone}`;
+           let strSQL = `SELECT * from ${data.type}_log where uid=${row[0].uid}`;
           connection.query(strSQL, (error, rows, feilds)=>{
             res.send(APIresult(error,rows, feilds, 'List execution successful!'));
           })

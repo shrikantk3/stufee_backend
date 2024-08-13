@@ -1,10 +1,11 @@
 const express = require('express');
 const Authrouter = require('./auth');
-// const Candidaterouter = require('./candidate');
+const schoolRouter = require('./school');
+const studentRouter = require('./student');
 const Approuter = express.Router();
 
-// Approuter.use('/candidate', Candidaterouter);
-// Approuter.use('/tutor', Candidaterouter);
+
 Approuter.use('/auth', Authrouter);
-console.log("HI I am Stufee")
+Approuter.use('/school', schoolRouter);
+Approuter.use('/student', studentRouter);
 module.exports = Approuter;
