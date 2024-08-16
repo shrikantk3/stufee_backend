@@ -27,10 +27,21 @@ Authrouter.get('/', (req, res) => {
         let date = new Date();
         data.uid = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
         let strquery = `INSERT INTO users_log(uid,username,password, phone,type,createdon,created_by,modify_on,
-        modify_by,email)VALUES('${data.uid}','${data.username}','${data.password}',${data.phone},'${data.type}',
+        modify_by,email)VALUES('${data.uid}','${data.username}','${data.password}','${data.phone}','${data.type}',
         sysdate(),'admin',sysdate(),'admin','${data.email}')`;
+        //INSERT INTO `defaultdb`.`users_log` (`uid`, `username`, `password`, `token`, `type`, `active`,
+        // `created_by`, `createdon`, `modify_by`, `modify_on`, `email`, `phone`) VALUES 
+        //('23211', 'syana', '1234', 'null', 'teacher', '1', 'admin', '2024-08-16', 'admin', 
+        //'2024-08-16', 'syana@gmail.com', '0987122323');
         connection.query(strquery, (err, row, feild) => {
-          res.end(APIresult(err,row, feild, 'List execution successful!'));
+          if(err){
+            console.log("############# err:", err)
+            throw err;
+          }
+          else{
+            console.log("########else :", err, row)
+            res.end(row);
+          }
         })
     
     } else {
