@@ -56,12 +56,10 @@ Authrouter.get('/', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.body) {
       let data = req.body;
-      connection.query(`SELECT * from users_log where username ='${data.username}'`, (err, row, feild) => {
-        if(row[0].uid){
-           let strSQL = `SELECT * from ${row[0].type}_log where uid=${row[0].uid}`;
-          connection.query(strSQL, (error, rows, feilds)=>{
-            res.send(APIresult(error,rows, feilds, 'List execution successful!'));
-          })
+      connection.query(`SELECT * from users_log where username ='${data.username}' and password='${data.password}'`, (err, row, feild) => {
+        if(err) throw err 
+        else{
+          res.end(APIresult(err, row, feild, 'Succefully logedin!'))
         }
       })
     } else {
