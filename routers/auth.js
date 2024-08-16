@@ -58,7 +58,7 @@ Authrouter.get('/', (req, res) => {
       let data = req.body;
       connection.query(`SELECT * from users_log where username ='${data.username}'`, (err, row, feild) => {
         if(row[0].uid){
-           let strSQL = `SELECT * from ${data.type}_log where uid=${row[0].uid}`;
+           let strSQL = `SELECT * from ${row[0].type}_log where uid=${row[0].uid}`;
           connection.query(strSQL, (error, rows, feilds)=>{
             res.send(APIresult(error,rows, feilds, 'List execution successful!'));
           })
