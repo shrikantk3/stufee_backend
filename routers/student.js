@@ -28,19 +28,19 @@ studentRouter.get('/', (req, res)=>{
              console.log("####### :",str)
         connection.query(str, (err, rows, feilds)=>{
             if (err){
-                res.end(resultAPI(err, rows, feilds, 'Data error!'))
+                res.send(resultAPI(err, rows, feilds, 'Data error!'))
             }
             else{
-                res.end(resultAPI(err, rows, feilds, 'Data successful!'))
+                res.send(resultAPI(err, rows, feilds, 'Data successful!'))
             }
         })
      }
  })
  .put('/', (req, res)=>{
-     res.end('studentRouter PUT Reposnse of Router');
+     res.send('studentRouter PUT Reposnse of Router');
  })
  .delete('/', (req, res)=>{
-     res.end('studentRouter DELETE Reposnse of Router');
+     res.send('studentRouter DELETE Reposnse of Router');
  })
  
 

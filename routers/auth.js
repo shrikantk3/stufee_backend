@@ -40,12 +40,12 @@ Authrouter.get('/', (req, res) => {
           }
           else{
             console.log("########else :", err, row)
-            res.end(row);
+            res.send(row);
           }
         })
     
     } else {
-      res.end({
+      res.send({
         result: null,
         message: 'invalid input please try again',
         valid: false
@@ -59,7 +59,7 @@ Authrouter.get('/', (req, res) => {
       connection.query(`SELECT * from users_log where username ='${data.username}' and password='${data.password}'`, (err, row, feild) => {
         if(err) throw err 
         else{
-          res.end(APIresult(err, row, feild, 'Succefully logedin!'))
+          res.send(APIresult(err, row, feild, 'Succefully logedin!'))
         }
       })
     } else {
@@ -72,7 +72,7 @@ Authrouter.get('/', (req, res) => {
   })
   .delete('/', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.end('Auth DELETE Reposnse of Router');
+    res.send('Auth DELETE Reposnse of Router');
   })
 
 module.exports = Authrouter;

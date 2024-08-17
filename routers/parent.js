@@ -28,18 +28,18 @@ teacherRouter.get('/', (req, res)=>{
           connection.query(strQuery, (err, rows, feilds)=>{
             if (err) throw err
             else {
-                res.end(resultAPI(err, rows, feilds, 'Succefully Submited!'));
+                res.send(resultAPI(err, rows, feilds, 'Succefully Submited!'));
             }
           })
     }else{
-        res.end(resultAPI(null, null, null, 'Something went wrong!'));
+        res.send(resultAPI(null, null, null, 'Something went wrong!'));
     }
  })
  .put('/', (req, res)=>{
-     res.end('Candidaterouter PUT Reposnse of Router');
+     res.send('Candidaterouter PUT Reposnse of Router');
  })
  .delete('/:id', (req, res)=>{
-     res.end('Candidaterouter DELETE Reposnse of Router');
+     res.send('Candidaterouter DELETE Reposnse of Router');
  })
  
 

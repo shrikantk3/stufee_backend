@@ -20,5 +20,8 @@
     "mysql2": "^3.11.0",
     "nodemon": "^2.0.20",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.4.0"
   }
 }
