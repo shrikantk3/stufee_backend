@@ -11,11 +11,11 @@ schoolRouter.get('/', (req, res)=>{
      }
     })
  }).get('/:id', (req, res)=>{
-    connection.query(`select * from school_log where id = "${req.params.id}"`, (err, row, feild)=>{
+    connection.query(`select * from school_log where id = '${req.params.id}'`, (err, row, feild)=>{
      if(err){ 
-        res.send(resultAPI(err, row,'Error!!'));
+        res.send(resultAPI(err, row,feild, 'Error!!'));
      }else{
-         res.send(resultAPI(err, row,'School Data  is coming!'));
+         res.send(resultAPI(err, row,feild, 'School Data fetched successfully!'));
      }
     })
  }).post('/', (req, res)=>{

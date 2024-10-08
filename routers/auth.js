@@ -1,14 +1,19 @@
 const express = require('express');
+const multer = require('multer')
 const app = express();
 const Authrouter = express.Router();
 const connection = require('../www/config');
 const APIresult = require('../controller/shared-controller');
+const path = require('path');
+
+
+
 
 Authrouter.get('/', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    connection.query('select * from users_log', (err, row, feild) => {
-      res.send(APIresult(err, row, feild, 'List execution successful!'));
-    })
+  connection.query('select * from users_log', (err, row, feild) => {
+    res.send(APIresult(err, row, feild, 'List execution successful!'));
+  })
   }).get('/:id', (req, res) => {
     console.log(req.params.id)
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,17 +34,11 @@ Authrouter.get('/', (req, res) => {
         let strquery = `INSERT INTO users_log(uid,username,password, phone,type,createdon,created_by,modify_on,
         modify_by,email)VALUES('${data.uid}','${data.username}','${data.password}','${data.phone}','${data.type}',
         sysdate(),'admin',sysdate(),'admin','${data.email}')`;
-        //INSERT INTO `defaultdb`.`users_log` (`uid`, `username`, `password`, `token`, `type`, `active`,
-        // `created_by`, `createdon`, `modify_by`, `modify_on`, `email`, `phone`) VALUES 
-        //('23211', 'syana', '1234', 'null', 'teacher', '1', 'admin', '2024-08-16', 'admin', 
-        //'2024-08-16', 'syana@gmail.com', '0987122323');
         connection.query(strquery, (err, row, feild) => {
           if(err){
-            console.log("############# err:", err)
             throw err;
           }
           else{
-            console.log("########else :", err, row)
             res.send(row);
           }
         })
@@ -70,9 +69,125 @@ Authrouter.get('/', (req, res) => {
       });
     }
   })
+  .post('/create', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    if (req.body) {
+      let data = req.body;
+      let date = new Date();
+      data.uid = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
+      let strQuery=`INSERT INTO users_log (uid,username,password,token,type,active, created_by,createdon,modify_by,modify_on, email,phone) value 
+('${data.uid}','${data.username}','${data.password}',null,'${data.type}',1,'admin',sysdate(),'admin',sysdate(),'${data.email}',${data.phone})`
+      connection.query(strQuery, (err, row, feild) => {
+        if(err) throw err 
+        else{
+          res.send({result:row, udata:data, message:'Successfully Created'});
+        }
+      })
+    } else {
+      res.send({
+        result: null,
+        message: 'invalid input please try again',
+        valid: false
+      });
+    }
+  })
+  .post('/logout', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    if (req.body) {
+      let data = req.body;
+      connection.query(`UPDATE users_log SET token=null where uid='${data.uid}'`, (err, row, feild) => {
+        if(err) throw err 
+        else{
+          res.send(APIresult(err, row, feild, 'Logout Successful!'))
+        }
+      })
+    } else {
+      res.send({
+        result: null,
+        message: 'invalid input please try again',
+        valid: false
+      });
+    }
+  })
+  .post('/token', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    if (req.body) {
+      let data = req.body;
+      connection.query(`UPDATE users_log SET token='${data.token}' where uid='${data.uid}'`, (err, row, feild) => {
+        if(err) throw err 
+        else{
+          res.send(APIresult(err, row, feild, 'Token insert Successfully!'))
+        }
+      })
+    } else {
+      res.send({
+        result: null,
+        message: 'invalid input please try again',
+        valid: false
+      });
+    }
+  })
+  .post('/upload', (req, res, next)=>{
+    console.log("DDDDDDD :", req.body)
+    upload(req, res, function (err) {
+      if (err) {
+          res.send(err);
+      } else {
+          // SUCCESS, image successfully uploaded
+          res.send({
+            message:'File Upload Succefully!',
+            result: req.file
+          });
+      }
+  });
+  })
   .delete('/', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.send('Auth DELETE Reposnse of Router');
   })
+
+
+
+// UPLOAD START HERE -------------------------------------------
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      // Uploads is the Upload_folder_name
+      cb(null, "assets/images");
+  },
+  filename: function (req, file, cb) {
+      let uid =  req.body.uid?req.body.uid:'';
+      let type =  req.body.type?req.body.type:'';
+      cb(null, uid + "-" + type + "-" + Date.now() + ".jpg");
+  },
+});
+const maxSize = 1 * 1000 * 1000;
+var upload = multer({
+  storage: storage,
+  limits: { fileSize: maxSize },
+  fileFilter: function (req, file, cb) {
+      // Set the filetypes, it is optional
+      var filetypes = /jpeg|jpg|png/;
+      var mimetype = filetypes.test(file.mimetype);
+
+      var extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase()
+  );
+
+  if (mimetype && extname) {
+      return cb(null, true);
+  }
+
+  cb(
+      "Error: File upload only supports the " +
+          "following filetypes - " +
+          filetypes
+  );
+},
+
+// mypic is the name of file attribute
+}).single("photo");
+
+// UPLOAD END HERE -------------------------------------
+
 
 module.exports = Authrouter;

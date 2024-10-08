@@ -11,7 +11,13 @@ teacherRouter.get('/', (req, res)=>{
      }
     })
  }).get('/:id', (req, res)=>{
-    connection.query(`select * from teacher_log where uid = "${req.params.id}"`, (err, row, feild)=>{
+    connection.query(`select * from teacher_log where uid = '${req.params.id}'`, (err, row, feild)=>{
+     if(err){ res.send(err)}else{
+         res.send(row);
+     }
+    })
+ }).get('/byschool/:id', (req, res)=>{
+    connection.query(`select * from teacher_log where school_id = '${req.params.id}'`, (err, row, feild)=>{
      if(err){ res.send(err)}else{
          res.send(row);
      }
