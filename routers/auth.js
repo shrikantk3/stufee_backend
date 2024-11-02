@@ -59,7 +59,7 @@ Authrouter.get('/', (req, res) => {
         if(err) throw err 
         else{
           id = row.results?row.results[0].uid:'345543'
-          let token = jwt.sign({id:id}, 'gfg_jwt_secret_key');
+          let token = jwt.sign({id:id}, '');
           res.send(APIresult(err, row, feild, token))
         }
       })
@@ -130,7 +130,6 @@ Authrouter.get('/', (req, res) => {
     }
   })
   .post('/upload', (req, res, next)=>{
-    console.log("DDDDDDD :", req.body)
     upload(req, res, function (err) {
       if (err) {
           res.send(err);
