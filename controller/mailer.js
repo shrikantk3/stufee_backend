@@ -6,8 +6,8 @@ const transports = mailer.createTransport({
     port:587,
     secure:false,
     auth:{
-        user:'abhash.gupta18@gmail.com',
-        pass:'egnh jtbr iboc nklc'
+        user:'',
+        pass:''
     },
     tls: {
         rejectUnauthorized: false

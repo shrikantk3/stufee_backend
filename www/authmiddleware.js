@@ -7,7 +7,7 @@ const authenticateToken = (req, res, next) => {
   
     if (token == null) return res.sendStatus(401);
   
-    jwt.verify(token, 'sv7ykYqJl_Z_r0bvuO-V_uj8MYnWptoWZGMGshiGTRrkPDh8MeLc8orgECrerl_B', (err, decoded) => {
+    jwt.verify(token, 'sv7ykYqJl_Z_r0bvuO-', (err, decoded) => {
       if (err) return res.sendStatus(403);
       req.user = decoded; // Attach user data to the request
       next();
