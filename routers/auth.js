@@ -5,7 +5,7 @@ const Authrouter = express.Router();
 const connection = require('../www/config');
 const APIresult = require('../controller/shared-controller');
 const path = require('path');
-
+const jwt = require('jsonwebtoken');
 
 
 
@@ -58,7 +58,9 @@ Authrouter.get('/', (req, res) => {
       connection.query(`SELECT * from users_log where username ='${data.username}' and password='${data.password}'`, (err, row, feild) => {
         if(err) throw err 
         else{
-          res.send(APIresult(err, row, feild, 'Succefully logedin!'))
+          id = row.results?row.results[0].uid:'345543'
+          let token = jwt.sign({id:id}, 'gfg_jwt_secret_key');
+          res.send(APIresult(err, row, feild, token))
         }
       })
     } else {

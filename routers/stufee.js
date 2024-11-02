@@ -3,20 +3,21 @@ const app = express();
 const StufeeRouter = express.Router();
 const connection = require('../www/config');
 const resultAPI = require('../controller/shared-controller');
+const verifyToken = require('../controller/jwtauth')
 
-StufeeRouter.get('/', (req, res)=>{
+StufeeRouter.get('/',verifyToken, (req, res)=>{
     connection.query('select * from stufee_log', (err, row, feild)=>{
      if(err){ res.send(err)}else{
          res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
- }).get('/:id', (req, res)=>{
+ }).get('/:id',verifyToken, (req, res)=>{
     connection.query(`select * from stufee_log where id = '${req.params.id}'`, (err, row, feild)=>{
      if(err){ res.send(err)}else{
         res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
- }).get('/byschool/:id', (req, res)=>{
+ }).get('/byschool/:id',verifyToken, (req, res)=>{
     if(req.params.id){
         connection.query(`select * from stufee_log where school_id = '${req.params.id}'`, (err, row, feild)=>{
             if(err){ res.send(err)}else{
@@ -26,7 +27,7 @@ StufeeRouter.get('/', (req, res)=>{
     }else{
         res.send({results:null, error:true, message:'Invalid Id. Please try again!'})
     }
- }).post('/', (req, res)=>{
+ }).post('/',verifyToken, (req, res)=>{
     if(req.body){
         let data = req.body;
         let date = new Date();        
@@ -47,10 +48,10 @@ StufeeRouter.get('/', (req, res)=>{
         res.send(resultAPI(null, null, null, 'Something went wrong!'));
     }
  })
- .put('/', (req, res)=>{
+ .put('/',verifyToken, (req, res)=>{
      res.send('Candidaterouter PUT Reposnse of Router');
  })
- .delete('/:id', (req, res)=>{
+ .delete('/:id',verifyToken, (req, res)=>{
      res.send('Candidaterouter DELETE Reposnse of Router');
  })
  

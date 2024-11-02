@@ -11,6 +11,7 @@ const FeeRouter = require('./fee');
 const ClassRouter = require('./class');
 const SectionRouter = require('./section');
 const  FinancialYearRouter= require('./finacial_year');
+const TicketRouter = require('./ticket');
 // const adminRouter = require('./');
 const Approuter = express.Router();
 
@@ -27,5 +28,6 @@ Approuter.use('/stufee', StufeeRouter);
 Approuter.use('/class', ClassRouter);
 Approuter.use('/section', SectionRouter);
 Approuter.use('/finyear', FinancialYearRouter);
+Approuter.use('/ticket', TicketRouter);
 // Approuter.use('/admin', adminRouter);
 module.exports = Approuter;

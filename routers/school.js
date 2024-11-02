@@ -3,6 +3,7 @@ const app = express();
 const schoolRouter = express.Router();
 const connection = require('../www/config');
 const resultAPI = require('../controller/shared-controller');
+const verifyToken = require('../controller/jwtauth')
 
 schoolRouter.get('/', (req, res)=>{
     connection.query('select * from school_log', (err, row, feild)=>{
@@ -18,7 +19,7 @@ schoolRouter.get('/', (req, res)=>{
          res.send(resultAPI(err, row,feild, 'School Data fetched successfully!'));
      }
     })
- }).post('/', (req, res)=>{
+ }).post('/',verifyToken, (req, res)=>{
     let data = req.body;
     let date = new Date();
     data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
@@ -30,10 +31,10 @@ VALUES('${data.id}','${data.uid}','${data.name}','${data.address1}','${data.addr
         res.send(resultAPI(err,rows, feilds, 'Submited Successful!'))
     })
  })
- .put('/', (req, res)=>{
+ .put('/',verifyToken, (req, res)=>{
      res.send('Candidaterouter PUT Reposnse of Router');
  })
- .delete('/', (req, res)=>{
+ .delete('/',verifyToken, (req, res)=>{
      res.send('Candidaterouter DELETE Reposnse of Router');
  })
  
