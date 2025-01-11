@@ -48,6 +48,23 @@ StufeeRouter.get('/',verifyToken, (req, res)=>{
         res.send(resultAPI(null, null, null, 'Something went wrong!'));
     }
  })
+ .post('/payment', (req, res)=>{
+    if(req.body){
+        let data = req.body;
+        console.log(data);
+        let strQuery = `UPDATE stufee_log SET pay_mode = '${data.pay_mode}', paid=1 WHERE id = '${data.id}' and uid = '${data.uid}'`;
+          connection.query(strQuery, (err, rows, feilds)=>{
+            if (err) {
+                res.send(resultAPI(err, rows, feilds, 'Invalid Entry!'));
+            }
+            else {
+                res.send(resultAPI(err, rows, feilds, 'Succefully Submited!'));
+            }
+          })
+    }else{
+        res.send(resultAPI(null, null, null, 'Something went wrong!'));
+    }
+ })
  .put('/',verifyToken, (req, res)=>{
      res.send('Candidaterouter PUT Reposnse of Router');
  })

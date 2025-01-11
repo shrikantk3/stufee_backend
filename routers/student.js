@@ -31,9 +31,9 @@ studentRouter.get('/', verifyToken, (req, res) => {
             let data = req.body;
             let date = new Date();
             data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
-            let str = `Insert INTO student_log (id, uid, fname, mname, lname, full_name,mother_name, father_name, city, country, class, school_id, section, phone, address1, address2, email, parent_id, created_by, created_on, modify_by, modify_on, dob, doa,state, doc1, doc2, certificate, prev_school, active, persona) 
+            let str = `Insert INTO student_log (id, uid, fname, mname, lname, full_name,mother_name, father_name, city, country, class, school_id, section, phone, address1, address2, email, parent_id, created_by, created_on, modify_by, modify_on, dob, doa,state, doc1, doc2, certificate, prev_school, active, persona, gender) 
             VALUES ('${data.id}', '${data.uid}', '${data.fname}','${data.mname}', '${data.lname}','${data.full_name}', '${data.mother_name}', '${data.father_name}', '${data.city}',
-             '${data.country}', '${data.class}','${data.school_id}','${data.section}','${data.phone}','${data.address1}','${data.address2}','${data.email}','${data.parent_id}','admin',sysdate(),'admin',sysdate(), '${data.dob}', '${data.doa}', '${data.state}','${data.doc1}','${data.doc2}','${data.certificate}','${data.prev_school}',1,1)`;
+             '${data.country}', '${data.class}','${data.school_id}','${data.section}','${data.phone}','${data.address1}','${data.address2}','${data.email}','${data.parent_id}','admin',sysdate(),'admin',sysdate(), '${data.dob}', '${data.doa}', '${data.state}','${data.doc1}','${data.doc2}','${data.certificate}','${data.prev_school}',1,1, '${data.gender}')`;
                 
             connection.query(str, (err, rows, feilds) => {
                 if (err) {
@@ -50,7 +50,7 @@ studentRouter.get('/', verifyToken, (req, res) => {
         if (req.body) {
             let data = req.body;
             res.setHeader('Access-Control-Allow-Origin', '*');
-            let str = `UPDATE student_log SET fname='${data.fname}', mname='${data.mname}', lname='${data.lname}',full_name='${data.fname} ${data.mname} ${data.lname}', dob='${data.dob}',doa='${data.doa}',father_name='${data.father_name}',mother_name='${data.mother_name}',city='${data.city}', country='${data.country}', class='${data.class}', section='${data.section}', phone='${data.phone}', address1='${data.address1}', address2='${data.address2}', state='${data.state}', email='${data.email}', parent_id='${data.parent_id}',modify_by='admin', modify_on=sysdate(), profile_pic='${data.profile_pic}', certificate='${data.certificate}', doc1='${data.doc1}', doc2='${data.doc2}', active=${data.active} WHERE uid ='${data.uid}'`;
+            let str = `UPDATE student_log SET fname='${data.fname}', mname='${data.mname}', lname='${data.lname}',full_name='${data.fname} ${data.mname} ${data.lname}', dob='${data.dob}',doa='${data.doa}',father_name='${data.father_name}',mother_name='${data.mother_name}',city='${data.city}', country='${data.country}', class='${data.class}', section='${data.section}', phone='${data.phone}', address1='${data.address1}', address2='${data.address2}', state='${data.state}', email='${data.email}', parent_id='${data.parent_id}',modify_by='admin', modify_on=sysdate(), profile_pic='${data.profile_pic}', certificate='${data.certificate}', doc1='${data.doc1}', doc2='${data.doc2}', active=${data.active}, gender='${data.gender}' WHERE uid ='${data.uid}'`;
             connection.query(str, (err, rows, feilds) => {
                 if (err) {
                     res.send(resultAPI(err, rows, feilds, 'Data error!'))
