@@ -80,9 +80,16 @@ Authrouter.get('/', (req, res) => {
       let strQuery=`INSERT INTO users_log (uid,username,password,token,type,active, created_by,createdon,modify_by,modify_on, email,phone) value 
 ('${data.uid}','${data.username}','${data.password}',null,'${data.type}',1,'admin',sysdate(),'admin',sysdate(),'${data.email}',${data.phone})`
       connection.query(strQuery, (err, row, feild) => {
-        if(err) throw err 
+        if(err){
+          res.send({
+            results: null,
+            message: err.sqlMessage,
+            valid: false,
+            udata:null
+          });
+        }
         else{
-          res.send({result:row, udata:data, message:'Successfully Created'});
+          res.send({results:row, udata:data, message:'Successfully Created', valid:true});
         }
       })
     } else {

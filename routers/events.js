@@ -33,7 +33,8 @@ EventsRouter.get('/', verifyToken, (req, res) => {
         let date = new Date();
         data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
         let strQuery = `INSERT INTO event_log (id, title, start_date, end_date, description, created_by, created_on, modify_on, modify_by,pic,school_id, status, class, section) VALUES (
-        '${data.id}', '${data.title}', '${data.start_date}', '${data.end_date}', '${data.description}', 'admin', sysdate(), sysdate(), 'admin','${data.pic}','${data.school_id}','${data.status}', '${data.class}', '${data.section}')`;
+        '${data.id}', '${data.title}', '${data.start_date}', '${data.end_date}', ``${data.description}``, 'admin', sysdate(), sysdate(), 'admin','${data.pic}','${data.school_id}','${data.status}', '${data.class}', '${data.section}')`;
+        console.log(strQuery);
         connection.query(strQuery, (err, rows, feilds) => {
             if (err) {
                 res.send(resultAPI(err, rows, feilds, 'Invalid Entry!'));
@@ -49,7 +50,7 @@ EventsRouter.get('/', verifyToken, (req, res) => {
     .put('/', verifyToken, (req, res) => {
         let data = req.body;
         if (data) {
-            let strQuary = `UPDATE event_log SET title='${data.title}', pic='${data.pic}', modify_by='${data.created_by}', modify_on=sysdate(), status='${data.status}' WHERE id='${data.id}'`;
+            let strQuary = `UPDATE event_log SET title='${data.title}', pic='${data.pic}', modify_by='admin', modify_on=sysdate(), status='${data.status}' WHERE id='${data.id}'`;
             connection.query(strQuary, (err, rows, feild) => {
                 if (err) res.send(resultAPI(err, rows, feild, 'Error in Event data!'))
                 else res.send(resultAPI(err, rows, feild, 'Successfuly updated!'))

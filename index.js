@@ -4,6 +4,7 @@ const conn = require('./www/config');
 const _router = require('./routers/index');
 const path = require('path');
 const bodyParser = require('body-parser');
+const ErrorHandler = require('./www/errorhandler');
 const cors = require('cors');
 app.use(cors());
 app.use(bodyParser.json());
@@ -30,7 +31,7 @@ app.get('/images/:filename', (req, res) => {
   
     res.sendFile(imagePath);
   });
-
+app.use(ErrorHandler);
 app.listen(8080, err=>{
     if(err){throw err};
     console.log('*********** Server running at :', 8080);
