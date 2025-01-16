@@ -7,20 +7,22 @@ const verifyToken = require('../controller/jwtauth')
 
 FinancialYearRouter.get('/',verifyToken, (req, res)=>{
     connection.query('select * from financial_year_log', (err, row, feild)=>{
-     if(err){ res.send(err)}else{
+     if(err){  res.send(resultAPI(err, row, feild, 'Error!'));}
+     else{
          res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
  }).get('/:id',verifyToken, (req, res)=>{
     connection.query(`select * from financial_year_log where id = "${req.params.id}"`, (err, row, feild)=>{
-     if(err){ res.send(err)}else{
+     if(err){ res.send(resultAPI(err, row, feild, 'Error!'));}else{
         res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
  }).get('/byschool/:id',verifyToken, (req, res)=>{
     if(req.params.id){
         connection.query(`select * from financial_year_log where school_id = '${req.params.id}'`, (err, row, feild)=>{
-            if(err){ res.send(err)}else{
+            if(err){  res.send(resultAPI(err, row, feild, 'Error!'));}
+            else{
                res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
             }
            })

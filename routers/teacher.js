@@ -7,23 +7,35 @@ const verifyToken = require('../controller/jwtauth')
 
 teacherRouter.get('/',verifyToken, (req, res)=>{
     connection.query('select * from teacher_log', (err, row, feild)=>{
-     if(err){ res.send(err)}else{
-         res.send(row);
+     if(err){ res.send(resultAPI(err, row, feild, 'Error in teacher Table!'))}
+     else{
+        res.send(resultAPI(err, row, feild, 'Teacher Data loaded!'))
      }
     })
  }).get('/:id',verifyToken, (req, res)=>{
     connection.query(`select * from teacher_log where uid = '${req.params.id}'`, (err, row, feild)=>{
-     if(err){ res.send(err)}else{
-         res.send(row);
+        if(err){ res.send(resultAPI(err, row, feild, 'Error in teacher Table!'))}
+     else{
+        res.send(resultAPI(err, row, feild, 'Teacher Data loaded!'))
      }
     })
  }).get('/byschool/:id',verifyToken, (req, res)=>{
     connection.query(`select * from teacher_log where school_id = '${req.params.id}'`, (err, row, feild)=>{
-     if(err){ res.send(err)}else{
-         res.send(row);
+        if(err){ res.send(resultAPI(err, row, feild, 'Error in teacher Table!'))}
+     else{
+        res.send(resultAPI(err, row, feild, 'Teacher Data loaded!'))
      }
     })
- }).post('/',verifyToken, (req, res)=>{
+ })
+ .get('/byschool/:id/finyear',verifyToken, (req, res)=>{
+    connection.query(`select * from teacher_log where school_id = '${req.params.id}' and finyear='${req.params.finyear}'`, (err, row, feild)=>{
+        if(err){ res.send(resultAPI(err, row, feild, 'Error in teacher Table!'))}
+     else{
+        res.send(resultAPI(err, row, feild, 'Teacher Data loaded!'))
+     }
+    })
+})
+ .post('/',verifyToken, (req, res)=>{
 
     if(req.body){
         let data = req.body;

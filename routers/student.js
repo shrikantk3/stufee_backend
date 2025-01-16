@@ -8,28 +8,28 @@ const mailer = require('../controller/mailer');
 
 studentRouter.get('/', verifyToken, (req, res) => {
     connection.query('select * from student_log', (err, row, feild) => {
-        if (err) { res.send(err) } else {
-            res.send(row);
+        if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
+          res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
         }
     })
 }).get('/:id', verifyToken, (req, res) => {
     connection.query(`select * from student_log where uid = '${req.params.id}'`, (err, row, feild) => {
-        if (err) { res.send(err) } else {
-            res.send(row);
-        }
+      if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
+        res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
+      }
     })
 }).get('/byschool/:id', verifyToken, (req, res) => {
     connection.query(`select * from student_log where school_id = '${req.params.id}'`, (err, row, feild) => {
-        if (err) { res.send(err) } else {
-            res.send(row);
-        }
+      if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
+        res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
+      }
     })
 })
 .get('/byschool/:id/:finyear', verifyToken, (req, res) => {
   connection.query(`select * from student_log where school_id = '${req.params.id}' and fin_year='${req.params.finyear}'`, (err, row, feild) => {
-      if (err) { res.send(err) } else {
-          res.send(row);
-      }
+    if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
+      res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
+    }
   })
 })
     .post('/', verifyToken, (req, res) => {
