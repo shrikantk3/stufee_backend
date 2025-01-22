@@ -41,10 +41,9 @@ teacherRouter.get('/',verifyToken, (req, res)=>{
         let data = req.body;
         let date = new Date();
         data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
-        let strQuery = `INSERT INTO teacher_log (id, uid, fname, mname, lname, phone, email, department, role, address1, address2, city, country, doj, created_on, created_by, modify_on, modify_by, active, persona, state) VALUES (
-         '${data.id}', '${data.uid}', '${data.fname}', '${data.mname}', '${data.lname}', '${data.phone}', 
-         '${data.email}', '${data.department}', '${data.role}', '${data.address1}', '${data.address2}', '${data.city}',
-          '${data.country}', '${data.doj}', sysdate(), 'admin', 'sysdate()', 'admin', '1', '1', '${data.state}')`;
+        let strQuery = `INSERT INTO teacher_log (id, uid, fname, mname, lname, phone, email, department, role, address1, address2, city, country, doj, dob,school_id, created_on, created_by, modify_on, modify_by, active, persona, state) VALUES (
+         '${data.id}', '${data.id}', '${data.fname}', '${data.mname}', '${data.lname}', '${data.phone}', 
+         '${data.email}', '${data.department}', '${data.role}', '${data.address1}', '${data.address2}', '${data.city}','${data.country}', '${data.doj}','${data.dob}','${data.school_id}', SYSDATE(), '${data.uid}', SYSDATE(), '${data.uid}', ${data.active}, ${data.persona}, '${data.state}')`;
           connection.query(strQuery, (err, rows, feilds)=>{
             if (err) throw err
             else {

@@ -32,9 +32,9 @@ EventsRouter.get('/', verifyToken, (req, res) => {
         let data = req.body;
         let date = new Date();
         data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
-        let strQuery = `INSERT INTO event_log (id, title, start_date, end_date, description, created_by, created_on, modify_on, modify_by,pic,school_id, status, class, section) VALUES (
-        '${data.id}', '${data.title}', '${data.start_date}', '${data.end_date}', ``${data.description}``, 'admin', sysdate(), sysdate(), 'admin','${data.pic}','${data.school_id}','${data.status}', '${data.class}', '${data.section}')`;
-        console.log(strQuery);
+        let strQuery = `INSERT INTO event_log (id, title, start_date, end_date, description, created_by, created_on, modify_on, modify_by,pic,school_id, status, class, section, fin_year) VALUES (
+        '${data.id}', '${data.title}', '${data.start_date}', '${data.end_date}', '${data.description}', 'admin', sysdate(), sysdate(), 'admin','${data.pic}','${data.school_id}','${data.status}', '${data.class}', '${data.section}', '${data.fin_year}')`;
+        console.log("Event :", strQuery);
         connection.query(strQuery, (err, rows, feilds) => {
             if (err) {
                 res.send(resultAPI(err, rows, feilds, 'Invalid Entry!'));

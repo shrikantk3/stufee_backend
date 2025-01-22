@@ -19,7 +19,7 @@ SectionRouter.get('/',verifyToken, (req, res)=>{
     })
  }).get('/byschool/:id',verifyToken, (req, res)=>{
     if(req.params.id){
-        connection.query(`select * from section_log where school_id = '${req.params.id}'`, (err, row, feild)=>{
+        connection.query(`select class_log.name as class_name, section_log.* from class_log INNER JOIN section_log on class_log.id = section_log.class_id where section_log.school_id = '${req.params.id}'`, (err, row, feild)=>{
             if(err){ res.send(err)}else{
                res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
             }

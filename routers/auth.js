@@ -15,10 +15,9 @@ Authrouter.get('/', (req, res) => {
     res.send(APIresult(err, row, feild, 'List execution successful!'));
   })
   }).get('/:id', (req, res) => {
-    console.log(req.params.id)
     res.setHeader('Access-Control-Allow-Origin', '*');
       if (req.params.id) {
-        connection.query(`select * from users_log where uid="${req.params.id}"`, (err, row, feild) => {
+        connection.query(`select * from users_log where uid='${req.params.id}'`, (err, row, feild) => {
           res.send(APIresult(err, row, feild, 'List execution successful!'));
         })
       }
@@ -137,7 +136,6 @@ Authrouter.get('/', (req, res) => {
     }
   })
   .post('/upload', (req, res, next)=>{
-    console.log("DDDDDDD :", req.body)
     upload(req, res, function (err) {
       if (err) {
           res.send(err);

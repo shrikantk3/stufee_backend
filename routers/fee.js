@@ -27,6 +27,16 @@ FeeRouter.get('/',verifyToken, (req, res)=>{
     }else{
         res.send({results:null, error:true, message:'Invalid Id. Please try again!'})
     }
+ }).get('/byschool/:id/:uid',verifyToken, (req, res)=>{
+    if(req.params.id){
+        connection.query(`select * from fee_log where school_id = '${req.params.id}' and uid='${req.params.uid}'`, (err, row, feild)=>{
+            if(err){ res.send(err)}else{
+               res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
+            }
+           })
+    }else{
+        res.send({results:null, error:true, message:'Invalid Id. Please try again!'})
+    }
  }).post('/',verifyToken, (req, res)=>{
     if(req.body){
         let data = req.body;

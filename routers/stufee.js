@@ -27,6 +27,16 @@ StufeeRouter.get('/',verifyToken, (req, res)=>{
     }else{
         res.send({results:null, error:true, message:'Invalid Id. Please try again!'})
     }
+ }).get('/byschool/:id/:uid',verifyToken, (req, res)=>{
+    if(req.params.id){
+        connection.query(`select * from stufee_log where school_id = '${req.params.id}' and uid = '${req.params.uid}'`, (err, row, feild)=>{
+            if(err){ res.send(err)}else{
+               res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
+            }
+           })
+    }else{
+        res.send({results:null, error:true, message:'Invalid Id. Please try again!'})
+    }
  }).post('/',verifyToken, (req, res)=>{
     if(req.body){
         let data = req.body;
@@ -51,7 +61,6 @@ StufeeRouter.get('/',verifyToken, (req, res)=>{
  .post('/payment', (req, res)=>{
     if(req.body){
         let data = req.body;
-        console.log(data);
         let strQuery = `UPDATE stufee_log SET pay_mode = '${data.pay_mode}', paid=1 WHERE id = '${data.id}' and uid = '${data.uid}'`;
           connection.query(strQuery, (err, rows, feilds)=>{
             if (err) {
