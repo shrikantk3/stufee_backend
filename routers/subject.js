@@ -1,26 +1,28 @@
 const express = require('express');
 const app = express();
-const SectionRouter = express.Router();
+const SubjectsRouter = express.Router();
 const connection = require('../www/config');
 const resultAPI = require('../controller/shared-controller');
 const verifyToken = require('../controller/jwtauth')
 
-SectionRouter.get('/',verifyToken, (req, res)=>{
-    connection.query('select * from section_log', (err, row, feild)=>{
-     if(err){ res.send(err)}else{
+SubjectsRouter.get('/',verifyToken, (req, res)=>{
+    connection.query('select * from subject_log', (err, row, feild)=>{
+     if(err){  res.send(resultAPI(err, row, feild, 'Error!'));}
+     else{
          res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
  }).get('/:id',verifyToken, (req, res)=>{
-    connection.query(`select * from section_log where id = "${req.params.id}"`, (err, row, feild)=>{
-     if(err){ res.send(err)}else{
+    connection.query(`select * from subject_log where id = "${req.params.id}"`, (err, row, feild)=>{
+     if(err){ res.send(resultAPI(err, row, feild, 'Error!'));}else{
         res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
     })
  }).get('/byschool/:id',verifyToken, (req, res)=>{
     if(req.params.id){
-        connection.query(`select class_log.name as class_name, section_log.* from class_log INNER JOIN section_log on class_log.id = section_log.class_id where section_log.school_id = '${req.params.id}'`, (err, row, feild)=>{
-            if(err){ res.send(err)}else{
+        connection.query(`select sb.*, cl.name as class_name from subject_log sb INNER JOIN class_log cl where cl.id=sb.class_id and sb.school_id = '${req.params.id}'`, (err, row, feild)=>{
+            if(err){  res.send(resultAPI(err, row, feild, 'Error!'));}
+            else{
                res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
             }
            })
@@ -29,8 +31,9 @@ SectionRouter.get('/',verifyToken, (req, res)=>{
     }
  }).get('/byschool/:id/:class_id',verifyToken, (req, res)=>{
     if(req.params.id){
-        connection.query(`select class_log.name as class_name, section_log.* from class_log INNER JOIN section_log on class_log.id = section_log.class_id where class_log.id=section_log.class_id and  section_log.school_id ='${req.params.id}' and section_log.class_id ='${req.params.class_id}'`, (err, row, feild)=>{
-            if(err){ res.send(err)}else{
+        connection.query(`select sb.*, cl.name as class_name from subject_log sb INNER JOIN class_log cl where cl.id=sb.class_id and sb.school_id='${req.params.id}' and sb.class_id='${req.params.class_id}'`, (err, row, feild)=>{
+            if(err){  res.send(resultAPI(err, row, feild, 'Error!'));}
+            else{
                res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
             }
            })
@@ -42,8 +45,7 @@ SectionRouter.get('/',verifyToken, (req, res)=>{
         let data = req.body;
         let date = new Date();        
         data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
-        let strQuery = `INSERT INTO section_log (id, name,class_id, created_by, created_on, modify_on, modify_by,school_id) VALUES (
-        ${data.id}, '${data.name}', '${data.class_id}', 'admin', sysdate(), sysdate(), 'admin','${data.school_id}')`;
+        let strQuery = `INSERT INTO subject_log (id, name,school_id,class_id,section_id,fin_year, created_by, created_on, modify_on, modify_by) VALUES (${data.id},'${data.name}','${data.school_id}','${data.class_id}','${data.section_id}','${data.fin_year}','${data.created_by?data.created_by:'admin'}', sysdate(), sysdate(),'${data.modify_by?data.modify_by:'admin'}')`;
           connection.query(strQuery, (err, rows, feilds)=>{
             if (err) {
                 res.send(resultAPI(err, rows, feilds, 'Invalid Entry!'));
@@ -64,5 +66,5 @@ SectionRouter.get('/',verifyToken, (req, res)=>{
  })
  
 
-module.exports = SectionRouter;
+module.exports = SubjectsRouter;
 

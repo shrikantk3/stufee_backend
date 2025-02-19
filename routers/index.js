@@ -13,6 +13,10 @@ const SectionRouter = require('./section');
 const  FinancialYearRouter= require('./finacial_year');
 const TicketRouter = require('./ticket');
 const ReportRouter = require('./reports');
+const LMSRouter = require('./leaveSystem');
+const AttendenceRouter = require('./attendence');
+const SubjectsRouter = require('./subject');
+const timetableRouter = require('./timetable');
 // const adminRouter = require('./');
 const Approuter = express.Router();
 
@@ -31,6 +35,10 @@ Approuter.use('/section', SectionRouter);
 Approuter.use('/finyear', FinancialYearRouter);
 Approuter.use('/ticket', TicketRouter);
 Approuter.use('/reports', ReportRouter);
+Approuter.use('/attendence', AttendenceRouter);
+Approuter.use('/lms', LMSRouter);
+Approuter.use('/subject', SubjectsRouter);
+Approuter.use('/timetable', timetableRouter);
 
 // Approuter.use('/admin', adminRouter);
 module.exports = Approuter;

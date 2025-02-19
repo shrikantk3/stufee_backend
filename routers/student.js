@@ -13,51 +13,72 @@ studentRouter.get('/', verifyToken, (req, res) => {
         }
     })
 }).get('/:id', verifyToken, (req, res) => {
-    connection.query(`select * from student_log where uid = '${req.params.id}'`, (err, row, feild) => {
+  let strqry = `select std.*, cl.name as class, sc.name as section from student_log std INNER JOIN class_log  cl on cl.id =std.class_id INNER JOIN section_log sc on sc.id = std.section_id where std.uid = '${req.params.id}'`
+  connection.query(strqry, (err, row, feild) => {
       if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
         res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
       }
     })
 }).get('/byschool/:id', verifyToken, (req, res) => {
-    connection.query(`select * from student_log where school_id = '${req.params.id}'`, (err, row, feild) => {
+    connection.query(`select std.*, cl.name as class, sc.name as section from student_log std INNER JOIN class_log  cl on cl.id =std.class_id  INNER JOIN section_log sc on sc.id = std.section_id where std.school_id = '${req.params.id}'`, (err, row, feild) => {
       if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
         res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
       }
     })
 })
 .get('/byschool/:id/:finyear', verifyToken, (req, res) => {
-  connection.query(`select * from student_log where school_id = '${req.params.id}' and fin_year='${req.params.finyear}'`, (err, row, feild) => {
+  connection.query(`select std.*, cl.name as class, sc.name as section from student_log std INNER JOIN class_log  cl on cl.id =std.class_id INNER JOIN section_log sc on sc.id = std.section_id where std.school_id = '${req.params.id}' and std.fin_year='${req.params.finyear}'`, (err, row, feild) => {
     if (err) { res.send(resultAPI(err, row, feild, 'Error on Load!')) } else {
       res.send(resultAPI(err, row, feild, 'Student Data Load successfully!'));
     }
   })
-})
-    .post('/', verifyToken, (req, res) => {
+}) .post('/', verifyToken, (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (req.body) {
+      let data = req.body;
+      let date = new Date();
+      data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
+      let str = `Insert INTO student_log (id, uid, fname, mname, lname, full_name,mother_name, father_name, city, country, class_id, school_id, section_id, phone, address1, address2, email, parent_id, created_by, created_on, modify_by, modify_on, dob, doa,state, doc1, doc2, certificate, prev_school, active, persona, gender, fin_year) 
+      VALUES ('${data.id}', '${data.uid}', '${data.fname}','${data.mname}', '${data.lname}','${data.full_name}', '${data.mother_name}', '${data.father_name}', '${data.city}',
+       '${data.country}', '${data.class_id}','${data.school_id}','${data.section_id}','${data.phone}','${data.address1}','${data.address2}','${data.email}','${data.parent_id}','admin',sysdate(),'admin',sysdate(), '${data.dob}', '${data.doa}', '${data.state}','${data.doc1}','${data.doc2}','${data.certificate}','${data.prev_school}',1,1, '${data.gender}', '${data.fin_year}')`;
+          
+      connection.query(str, (err, rows, feilds) => {
+          if (err) {
+              res.send(resultAPI(err, rows, feilds, 'Data error!'))
+          }
+          else {
+            connection.query(`select * from school_log where id='${data.school_id}'`,(err, row, feild)=>{
+              let school;
+              school = rows[0];
+              mailer('Myschool',`${data.email}`,'Student Create Successful','',student_email(data, row[0]))
+            })
+              
+              res.send(resultAPI(err, rows, feilds, 'Data successful!'))
+          }
+      })
+  }
+}).post('/byClassSection', verifyToken, (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         if (req.body) {
             let data = req.body;
-            let date = new Date();
-            data.id = `${date.getDay()}${date.getMonth()}${date.getSeconds()}${date.getMinutes()}`;
-            let str = `Insert INTO student_log (id, uid, fname, mname, lname, full_name,mother_name, father_name, city, country, class, school_id, section, phone, address1, address2, email, parent_id, created_by, created_on, modify_by, modify_on, dob, doa,state, doc1, doc2, certificate, prev_school, active, persona, gender, fin_year) 
-            VALUES ('${data.id}', '${data.uid}', '${data.fname}','${data.mname}', '${data.lname}','${data.full_name}', '${data.mother_name}', '${data.father_name}', '${data.city}',
-             '${data.country}', '${data.class}','${data.school_id}','${data.section}','${data.phone}','${data.address1}','${data.address2}','${data.email}','${data.parent_id}','admin',sysdate(),'admin',sysdate(), '${data.dob}', '${data.doa}', '${data.state}','${data.doc1}','${data.doc2}','${data.certificate}','${data.prev_school}',1,1, '${data.gender}', '${data.fin_year}')`;
-                
+            let str = `select * from student_log where school_id='${data.school_id}' and fin_year = '${data.fin_year}'`;
+            str += data.class_id?` and class_id='${data.class_id}'`:''; 
+            str+=data.section_id?` and section_id='${data.section_id}'`:'';
             connection.query(str, (err, rows, feilds) => {
                 if (err) {
                     res.send(resultAPI(err, rows, feilds, 'Data error!'))
                 }
-                else {
-                    mailer('Myschool',`${data.email}`,'Student Create Successful','',student_email(data))
+                else {                 
+                    
                     res.send(resultAPI(err, rows, feilds, 'Data successful!'))
                 }
             })
         }
-    })
-    .put('/', verifyToken, (req, res) => {
+}).put('/', verifyToken, (req, res) => {
         if (req.body) {
             let data = req.body;
             res.setHeader('Access-Control-Allow-Origin', '*');
-            let str = `UPDATE student_log SET fname='${data.fname}', mname='${data.mname}', lname='${data.lname}',full_name='${data.fname} ${data.mname} ${data.lname}', dob='${data.dob}',doa='${data.doa}',father_name='${data.father_name}',mother_name='${data.mother_name}',city='${data.city}', country='${data.country}', class='${data.class}', section='${data.section}', phone='${data.phone}', address1='${data.address1}', address2='${data.address2}', state='${data.state}', email='${data.email}', parent_id='${data.parent_id}',modify_by='admin', modify_on=sysdate(), profile_pic='${data.profile_pic}', certificate='${data.certificate}', doc1='${data.doc1}', doc2='${data.doc2}', active=${data.active}, gender='${data.gender}', fin_year='${data.fin_year}' WHERE uid ='${data.uid}'`;
+            let str = `UPDATE student_log SET fname='${data.fname}', mname='${data.mname}', lname='${data.lname}',full_name='${data.fname} ${data.mname} ${data.lname}', dob='${data.dob}',doa='${data.doa}',father_name='${data.father_name}',mother_name='${data.mother_name}',city='${data.city}', country='${data.country}', class_id='${data.class_id}', section_id='${data.section_id}', phone='${data.phone}', address1='${data.address1}', address2='${data.address2}', state='${data.state}', email='${data.email}', parent_id='${data.parent_id}',modify_by='admin', modify_on=sysdate(), profile_pic='${data.profile_pic}', certificate='${data.certificate}', doc1='${data.doc1}', doc2='${data.doc2}', active=${data.active}, gender='${data.gender}', fin_year='${data.fin_year}' WHERE uid ='${data.uid}'`;
             connection.query(str, (err, rows, feilds) => {
                 if (err) {
                     res.send(resultAPI(err, rows, feilds, 'Data error!'))
@@ -72,7 +93,7 @@ studentRouter.get('/', verifyToken, (req, res) => {
         res.send('studentRouter DELETE Reposnse of Router');
     });
 
-    function student_email(schoolData){
+    function student_email(schoolData, school){
       return `<!DOCTYPE HTML
       PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -285,7 +306,9 @@ studentRouter.get('/', verifyToken, (req, res) => {
                                   <!--[if mso]><table width="100%"><tr><td><![endif]-->
                                   <h1 class="v-font-size"
                                     style="margin: 0px; line-height: 110%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 30px; font-weight: 700;">
-                                    <span style="color: orangered;">{{'School Name'}}-{{'Branch'}}<br/></span></h1>
+                                    <span style="color: orangered;">
+                                    <img scr="https://stufee-backend.onrender.com/${school.logo?school.logo:''}" height='80px'; width="auto" />&nbsp;
+                                    ${school.name}-${school.location}<br/></span></h1>
                                     <h5 style="text-align: center;">Your Gateway to a Seamless School Experience!</h5>
                                   <!--[if mso]></td></tr></table><![endif]-->
     
@@ -420,10 +443,9 @@ studentRouter.get('/', verifyToken, (req, res) => {
     
                                   <div class="v-font-size"
                                     style="font-size: 14px; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                    <p style="font-size: 14px; line-height: 170%;"><b>Website: </b><a href="www.myschool.com">www.myschool.com</a></p>
-                                    <p style="font-size: 14px; line-height: 170%;"><b>contact: </b>{{'school Number'}}</p>
-                                    <p style="font-size: 14px; line-height: 170%;">Lorem ipsum dolor sit amet, consectetur
-                                      adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                                    <p style="font-size: 14px; line-height: 170%;"><b>Website: </b><a href="https://myschoolapps.github.io/in/">https://myschoolapps.github.io/in/</a></p>
+                                    <p style="font-size: 14px; line-height: 170%;"><b>contact: </b>${school.phone}</p>
+                                    <p style="font-size: 14px; line-height: 170%;">MySchool is a powerful platform integrates academic, administrative, and communication tools into a single, centralized system, offering a seamless experience for school administrators, teachers, students, and parents.</p>
                                   </div>
     
                                 </td>
