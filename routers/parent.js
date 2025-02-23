@@ -12,7 +12,7 @@ teacherRouter.get('/', verifyToken, (req, res)=>{
      }
     })
  }).get('/:id', verifyToken, (req, res)=>{
-    connection.query(`select * from parent_log where id = "${req.params.id}"`, (err, row, feild)=>{
+    connection.query(`select * from parent_log where uid = '${req.params.id}'`, (err, row, feild)=>{
      if(err){ res.send(err)}else{
         res.send(resultAPI(err, row, feild, 'Succefully loaded!'));
      }
