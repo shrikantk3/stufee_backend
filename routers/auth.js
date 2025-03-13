@@ -38,7 +38,9 @@ Authrouter.get('/', (req, res) => {
             throw err;
           }
           else{
-            res.send(row);
+            id = row.results?row.results[0].uid:'345543';
+            let token = jwt.sign({id:id}, 'gfg_jwt_secret_key');
+            res.send({results:row, udata:data, message:'Successfully Created', valid:true, token:token});
           }
         })
     
@@ -57,9 +59,9 @@ Authrouter.get('/', (req, res) => {
       connection.query(`SELECT * from users_log where username ='${data.username}' and password='${data.password}'`, (err, row, feild) => {
         if(err) throw err 
         else{
-          id = row.results?row.results[0].uid:'345543'
+          id = row.results?row.results[0].uid:'345543';
           let token = jwt.sign({id:id}, 'gfg_jwt_secret_key');
-          res.send(APIresult(err, row, feild, token))
+          res.send(APIresult(err, row, feild, token));
         }
       })
     } else {
