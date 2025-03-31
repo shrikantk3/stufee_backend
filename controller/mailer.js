@@ -1,18 +1,5 @@
 const mailer = require('nodemailer');
 
-const transports = mailer.createTransport({
-    service:'gmail',
-    host:'smtp.gmail.com',
-    port:587,
-    secure:false,
-    auth:{
-        user:'abhash.gupta18@gmail.com',
-        pass:'egnh jtbr iboc nklc'
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
 
 
 
