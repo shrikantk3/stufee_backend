@@ -307,7 +307,7 @@ studentRouter.get('/', verifyToken, (req, res) => {
                                   <h1 class="v-font-size"
                                     style="margin: 0px; line-height: 110%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 30px; font-weight: 700;">
                                     <span style="color: orangered;">
-                                    <img scr="https://stufee-backend.onrender.com/${school.logo?school.logo:''}" height='80px'; width="auto" />&nbsp;
+                                    <img scr="http://www.my-school.info/${school.logo?school.logo:''}" height='80px'; width="auto" />&nbsp;
                                     ${school.name}-${school.location}<br/></span></h1>
                                     <h5 style="text-align: center;">Your Gateway to a Seamless School Experience!</h5>
                                   <!--[if mso]></td></tr></table><![endif]-->
@@ -392,8 +392,15 @@ studentRouter.get('/', verifyToken, (req, res) => {
     
                                   <div class="v-font-size"
                                     style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                    <p style="line-height: 140%;">Dear Student,</p>
-                                    <p style="line-height: 140%;">Welcome to the mySchool community!<br/>Your account has been created and crredential shared benlow:</p>
+                                    <p style="line-height: 140%;">Dear Student/Parent,</p>
+                                    <p style="line-height: 140%;">Welcome to the ${school.name}  community! <br/> Branch : ${school.location}, Address: ${school.address1},${school.address2}, City:${school.city}.
+                                    
+                                        <ol>
+                                            <li><a href="http://www.my-school.info" target="_blank">http://www.my-school.info</a>&nbsp; Open link in your browser</li>
+                                            <li>Select Your School from list</li>
+                                            <li>On Login page enter your Credential given below.</li>
+                                        </ol>
+                                    <br/>Your account has been created and crredential shared benlow:</p>
                                     <p style="line-height: 140%;">
                                         <b>Username :</b>&nbsp;${schoolData.username}<br/>
                                         <b>Password :</b>&nbsp;${schoolData.password}
@@ -443,9 +450,10 @@ studentRouter.get('/', verifyToken, (req, res) => {
     
                                   <div class="v-font-size"
                                     style="font-size: 14px; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                    <p style="font-size: 14px; line-height: 170%;"><b>Website: </b><a href="https://myschoolapps.github.io/in/">https://myschoolapps.github.io/in/</a></p>
-                                    <p style="font-size: 14px; line-height: 170%;"><b>contact: </b>${school.phone}</p>
-                                    <p style="font-size: 14px; line-height: 170%;">MySchool is a powerful platform integrates academic, administrative, and communication tools into a single, centralized system, offering a seamless experience for school administrators, teachers, students, and parents.</p>
+                                    <p style="font-size: 14px; line-height: 170%;"><b>Website: </b><a href="http://www.my-school.info" target="_blank">http://www.my-school.info</a></p>
+                                    <p style="font-size: 14px; line-height: 170%;"><b>Contact: </b>${school.phone}</p>
+                                    <p style="font-size: 14px; line-height: 170%;"><b>Email: </b>${school.email}</p>
+                                    <small style="font-size: 12px; line-height:12px">MySchool is a powerful platform integrates academic, administrative, and communication tools into a single, centralized system, offering a seamless experience for school administrators, teachers, students, and parents.</small>
                                   </div>
     
                                 </td>
